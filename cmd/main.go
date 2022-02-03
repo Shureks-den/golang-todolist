@@ -2,12 +2,14 @@ package main
 
 import (
 	"database/sql"
-	"log"
-	conn "todolist/database"
-
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
+	conn "todolist/database"
+	"todolist/internal/pkg/middleware"
 )
+
+const port = "5000"
 
 func main() {
 	connString := "postgres://todolist:password@localhost:5432/todolist"
@@ -24,7 +26,9 @@ func main() {
 	}(db)
 
 	r := mux.NewRouter()
-	err = http.ListenAndServe("5000", r)
+	r.Use(middleware.ContentTypeMiddleware)
+	log.Default().Printf("start serving ::%s\n", port)
+	err = http.ListenAndServe(port, r)
 	if err != nil {
 		log.Fatal("cannot start server on addr 5000:", err.Error())
 		return
