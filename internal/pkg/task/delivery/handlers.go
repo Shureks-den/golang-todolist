@@ -14,7 +14,7 @@ type TaskDelivery struct {
 	taskUsecase task.TaskUsecase
 }
 
-func newTaskDelivery(taskUsecase task.TaskUsecase) *TaskDelivery {
+func NewTaskDelivery(taskUsecase task.TaskUsecase) *TaskDelivery {
 	return &TaskDelivery{
 		taskUsecase: taskUsecase,
 	}
