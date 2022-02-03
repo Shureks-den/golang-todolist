@@ -12,7 +12,7 @@ import (
 	"todolist/internal/pkg/task/usecase"
 )
 
-const port = "5000"
+const port = ":5000"
 
 func main() {
 	connString := "postgres://todolist:password@localhost:5432/todolist"
@@ -38,7 +38,7 @@ func main() {
 	log.Default().Printf("start serving ::%s\n", port)
 	err = http.ListenAndServe(port, r)
 	if err != nil {
-		log.Fatal("cannot start server on addr 5000:", err.Error())
+		log.Fatal("cannot start server on addr 5000\n", err.Error())
 		return
 	}
 }

@@ -5,5 +5,5 @@ type Task struct {
 	Title       string `json:"title"`
 	Description string `json:"description,omitempty"`
 	IsFinished  bool   `json:"is_finished"`
-	Created     string `json:"created"`
+	Created     string `json:"created,omitempty"`
 }

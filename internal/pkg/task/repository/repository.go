@@ -33,6 +33,9 @@ func (tr *TaskRepository) AddTask(task *models.Task) error {
 }
 
 func (tr *TaskRepository) DeleteTask(title string) error {
+	if err := tr.checkExistence(title); err != nil {
+		return err
+	}
 	_, err := tr.db.Exec(
 		"DELETE FROM tasks WHERE title = $1", title)
 	if err != nil {
@@ -43,7 +46,7 @@ func (tr *TaskRepository) DeleteTask(title string) error {
 }
 
 func (tr *TaskRepository) SelectAllTasks() ([]*models.Task, error) {
-	rows, err := tr.db.Query("SELECT id, title, description, isFinished, created FROM tasks")
+	rows, err := tr.db.Query("SELECT id, title, description, is_finished, created FROM tasks")
 	if err != nil {
 		tr.logger.Print(err.Error())
 		return nil, err
@@ -63,9 +66,24 @@ func (tr *TaskRepository) SelectAllTasks() ([]*models.Task, error) {
 }
 
 func (tr *TaskRepository) ChangeTaskStatus(title string, isFinished bool) error {
-	_, err := tr.db.Exec("UPDATE tasks SET isFinished = $1 WHERE title = $2",
+	if err := tr.checkExistence(title); err != nil {
+		return err
+	}
+	_, err := tr.db.Exec("UPDATE tasks SET is_finished = $1 WHERE title = $2",
 		isFinished, title)
 	if err != nil {
+		tr.logger.Print(err.Error())
+		return err
+	}
+	return nil
+}
+
+func (tr *TaskRepository) checkExistence(title string) error {
+	var id int64
+	if err := tr.db.QueryRow("SELECT id FROM tasks WHERE title = $1", title).Scan(&id); err != nil {
+		if err == sql.ErrNoRows {
+			return err
+		}
 		tr.logger.Print(err.Error())
 		return err
 	}
