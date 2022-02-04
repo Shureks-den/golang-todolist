@@ -38,7 +38,7 @@ func (td *TaskDelivery) Routing(r *mux.Router) {
 // @Produce json
 // @Param title body string true "Task title"
 // @Param description body string false "Task full description"
-// @Success 201 models.Message
+// @Success 201 {object} models.Message
 // @Failure 404 {object} models.Message
 // @Failure 409 {object} models.Message
 // @Router /task/create [post]
@@ -75,7 +75,7 @@ func (td *TaskDelivery) CreateTaskHandler(w http.ResponseWriter, r *http.Request
 // @Summary Delete existing task
 // @Produce json
 // @Param title path string true "Task title"
-// @Success 200 models.Message
+// @Success 200 {object} models.Message
 // @Failure 404 {object} models.Message
 // @Router /task/{title} [delete]
 func (td *TaskDelivery) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +98,7 @@ func (td *TaskDelivery) DeleteTaskHandler(w http.ResponseWriter, r *http.Request
 // @Produce json
 // @Param title path string true "Task title"
 // @Param finished query bool true "Param to change task status"
-// @Success 200 models.Message
+// @Success 200 {object} models.Message
 // @Failure 404 {object} models.Message
 // @Failure 500 {object} models.Message
 // @Router /task/{title} [post]
@@ -127,7 +127,7 @@ func (td *TaskDelivery) UpdateTaskHandler(w http.ResponseWriter, r *http.Request
 // SelectAllTaskHandler godoc
 // @Summary Get all tasks
 // @Produce json
-// @Success 200 []models.Task
+// @Success 200 {object} []models.Task
 // @Failure 404 {object} models.Message
 // @Failure 500 {object} models.Message
 // @Router /tasks [get]
@@ -154,7 +154,7 @@ func (td *TaskDelivery) SelectAllTaskHandler(w http.ResponseWriter, r *http.Requ
 // @Summary Get one task by its name
 // @Produce json
 // @Param title path string true "Task title"
-// @Success 200 models.Task
+// @Success 200 {object} models.Task
 // @Failure 404 {object} models.Message
 // @Failure 500 {object} models.Message
 // @Router /task/{title} [get]
