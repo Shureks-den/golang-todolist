@@ -37,3 +37,8 @@ func (tu *TaskUsecase) GetAllTasks() ([]*models.Task, error) {
 	tasks, err := tu.repo.SelectAllTasks()
 	return tasks, err
 }
+
+func (tu *TaskUsecase) GetSingleTask(title string) (*models.Task, error) {
+	res, err := tu.repo.GetSingleTask(title)
+	return res, err
+}

@@ -6,5 +6,6 @@ type TaskRepository interface {
 	AddTask(task *models.Task) error
 	DeleteTask(title string) error
 	SelectAllTasks() ([]*models.Task, error)
+	GetSingleTask(title string) (*models.Task, error)
 	ChangeTaskStatus(title string, isFinished bool) error
 }

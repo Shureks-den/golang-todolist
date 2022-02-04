@@ -27,6 +27,8 @@ func (td *TaskDelivery) Routing(r *mux.Router) {
 	r.HandleFunc("/task/{title}", td.DeleteTaskHandler).Methods(http.MethodDelete, http.MethodOptions)
 	// получение всех задач
 	r.HandleFunc("/tasks", td.SelectAllTaskHandler).Methods(http.MethodGet, http.MethodOptions)
+	// получение одной задачи по названию
+	r.HandleFunc("/task/{title}", td.DeleteTaskHandler).Methods(http.MethodGet, http.MethodOptions)
 	// post запрос будет менять статус
 	r.HandleFunc("/task/{title}", td.UpdateTaskHandler).Methods(http.MethodPost, http.MethodOptions)
 }
@@ -91,8 +93,26 @@ func (td *TaskDelivery) UpdateTaskHandler(w http.ResponseWriter, r *http.Request
 func (td *TaskDelivery) SelectAllTaskHandler(w http.ResponseWriter, r *http.Request) {
 	tasks, err := td.taskUsecase.GetAllTasks()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(`{"message": "cannot find tasks"}`))
+		return
+	}
+	buf, err := json.Marshal(tasks)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"message": "cannot marshal tasks"}`))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(buf)
+}
+
+func (td *TaskDelivery) GetSingleTaskHandler(w http.ResponseWriter, r *http.Request) {
+	title := mux.Vars(r)["title"]
+	tasks, err := td.taskUsecase.GetSingleTask(title)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(`{"message": "cannot find task with this title"}`))
 		return
 	}
 	buf, err := json.Marshal(tasks)

@@ -78,6 +78,19 @@ func (tr *TaskRepository) ChangeTaskStatus(title string, isFinished bool) error 
 	return nil
 }
 
+func (tr *TaskRepository) GetSingleTask(title string) (*models.Task, error) {
+	res := &models.Task{}
+	if err := tr.db.QueryRow("SELECT id, title, description, is_finished, created FROM tasks WHERE title = $1",
+		title).Scan(&res.Id, &res.Title, &res.Description, &res.IsFinished, &res.Created); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, err
+		}
+		tr.logger.Print(err.Error())
+		return nil, err
+	}
+	return res, nil
+}
+
 func (tr *TaskRepository) checkExistence(title string) error {
 	var id int64
 	if err := tr.db.QueryRow("SELECT id FROM tasks WHERE title = $1", title).Scan(&id); err != nil {

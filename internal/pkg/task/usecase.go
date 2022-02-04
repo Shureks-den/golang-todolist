@@ -7,4 +7,5 @@ type TaskUsecase interface {
 	DeleteTask(title string) error
 	UpdateTask(title string, status bool) error
 	GetAllTasks() ([]*models.Task, error)
+	GetSingleTask(title string) (*models.Task, error)
 }
